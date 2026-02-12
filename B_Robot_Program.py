@@ -1,5 +1,3 @@
-import sys
-
 t = int(input())
 for _ in range(t):
     n, x, k = map(int, input().split())
