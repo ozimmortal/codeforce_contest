@@ -23,3 +23,4 @@ if max_len == 0:
     print("0 1")
 else:
     print(max_len, count)
+

@@ -11,26 +11,24 @@ for _ in range(t):
     right = Counter(arr[l:])
 
     for color in list(left.keys()):
-        m = min(left[color], right[color])
-        left[color] -= m
-        right[color] -= m
-        l -= m
-        r -= m
+        if color in right:
+            m = min(left[color], right[color])
+            left[color] -= m
+            right[color] -= m
+            l -= m
+            r -= m
 
     if l > r:
         left, right = right, left
         l, r = r, l
 
-    diff = r - l
+    diff = (r - l) // 2
+    p= 0
     for color in right:
-        while right[color] >= 2 and diff > 0:
-            right[color] -= 2
-            diff -= 2
-            cost += 1
+        p += right[color] // 2
+    m = min(diff,p)
+    cost = diff + (l + r) // 2 - m
     
-    cost += diff // 2
-    remaining = sum(right.values())
-    cost += remaining // 2
 
     print(cost)
 
