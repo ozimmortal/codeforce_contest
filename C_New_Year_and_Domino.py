@@ -1,19 +1,52 @@
-row , col = map(int,input().split())
+h, w = map(int, input().split())
+grid = [input().strip() for _ in range(h)]
 
-prefix = [[0] * (col + 1) for _ in range(row + 1) ]
+# build hor and ver
+hor = [[0]*w for _ in range(h)]
+ver = [[0]*w for _ in range(h)]
 
-for r in range(1, row + 1):
-    board = [1 if x == "." else - 1 for x in input()]
-    for c , p in enumerate(board):
-        c = c + 1
-        prefix[r][c] = p + prefix[r-1][c] + prefix[r][c -1] - prefix[r-1][c-1]
+for i in range(h):
+    for j in range(w):
+        if j+1 < w and grid[i][j] == '.' and grid[i][j+1] == '.':
+            hor[i][j] = 1
+        if i+1 < h and grid[i][j] == '.' and grid[i+1][j] == '.':
+            ver[i][j] = 1
+
+# prefix sums
+prefH = [[0]*(w+1) for _ in range(h+1)]
+prefV = [[0]*(w+1) for _ in range(h+1)]
+
+for i in range(1, h+1):
+    for j in range(1, w+1):
+        prefH[i][j] = (
+            hor[i-1][j-1]
+            + prefH[i-1][j]
+            + prefH[i][j-1]
+            - prefH[i-1][j-1]
+        )
+        prefV[i][j] = (
+            ver[i-1][j-1]
+            + prefV[i-1][j]
+            + prefV[i][j-1]
+            - prefV[i-1][j-1]
+        )
+
+def query(pref, r1, c1, r2, c2):
+    return (
+        pref[r2][c2]
+        - pref[r1-1][c2]
+        - pref[r2][c1-1]
+        + pref[r1-1][c1-1]
+    )
 
 q = int(input())
-
-print(prefix)
 for _ in range(q):
-    r1,c1,r2,c2 = map(int,input().split())
-    ans = prefix[r2][c2] + prefix[r1-1][c1-1] - prefix[r1-1][c2] - prefix[r2][c1-1]
-    print(ans)
+    r1, c1, r2, c2 = map(int, input().split())
     
-
+    # horizontal
+    h_count = query(prefH, r1, c1, r2, c2-1) if c1 <= c2-1 else 0
+    
+    # vertical
+    v_count = query(prefV, r1, c1, r2-1, c2) if r1 <= r2-1 else 0
+    
+    print(h_count + v_count)
