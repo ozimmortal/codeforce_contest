@@ -1,21 +1,22 @@
-a = {
-    "Documents": {
-        "Proposal.docx": None,
-        "Receipts": {
-            "January": {
-                "receipt1.txt": None,
-                "receipt2.txt": None
-            },
-            "February": {
-                "receipt3.txt": None
-            }
-        }
-    },
-}
-
-for k , v in a.items():
-    print(k,v)
-
-a = []
-a.extend("b")
-print(a)
+t = int(input())
+for _ in range(t):
+    n = int(input())
+    a = list(map(int, input().split()))
+    
+    ans = 0
+    maxA = a[-1]
+    
+    for k in range(2, n):
+        need = max(a[k], maxA - a[k])
+        
+        i = 0
+        j = k - 1
+        
+        while i < j:
+            if a[i] + a[j] > need:
+                ans += (j - i)
+                j -= 1
+            else:
+                i += 1
+    
+    print(ans)
